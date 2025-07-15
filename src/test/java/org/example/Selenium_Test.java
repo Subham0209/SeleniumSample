@@ -14,6 +14,8 @@ import org.testng.annotations.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class Selenium_Test {
@@ -26,16 +28,29 @@ public class Selenium_Test {
     WebDriver driver;
 
      @BeforeClass
-     public void setup() throws Exception{
-         DesiredCapabilities caps = new DesiredCapabilities();
-         caps.setCapability("os", "Windows");
-         caps.setCapability("os_version", "10");
-         caps.setCapability("browser", "Chrome");
-         caps.setCapability("browser_version", "latest");
-         caps.setCapability("name", "Google Search Test on BrowserStack");
+     public void setup() throws MalformedURLException {
+         String username = System.getenv("BROWSERSTACK_USERNAME");
+         String accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY");
 
-         driver = new RemoteWebDriver(new URL(URL), caps);
- }
+         if (username == null || accessKey == null) {
+             throw new IllegalArgumentException("BrowserStack credentials not set in environment variables.");
+         }
+
+         DesiredCapabilities caps = new DesiredCapabilities();
+         caps.setCapability("browserName", "Chrome");
+         caps.setCapability("browserVersion", "latest");
+         caps.setCapability("os", "Windows");
+         caps.setCapability("osVersion", "10");
+         caps.setCapability("name", "Google Search Test on BrowserStack");
+         caps.setCapability("build", "Selenium_BS_Build");
+         caps.setCapability("browserstack.debug", "true");
+         caps.setCapability("browserstack.networkLogs", "true");
+
+         System.out.println("Connecting to BrowserStack with URL...");
+         String url = "https://" + username + ":" + accessKey + "@hub-cloud.browserstack.com/wd/hub";
+         driver = new RemoteWebDriver(new URL(url), caps);
+     }
+
 
     @Test
     public void googleSearch() {
