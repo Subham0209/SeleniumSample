@@ -43,7 +43,7 @@ public class Selenium_Test {
 
             // Start remote session
             driver = new RemoteWebDriver(
-                    new URL("https://USERNAME:ACCESS_KEY@hub-cloud.browserstack.com/wd/hub"),
+                    new URL("https://gopalbist_fs3NtA:q5uWYnH4psXJsnoxkcz1@hub-cloud.browserstack.com/wd/hub"),
                     caps
             );
         }
